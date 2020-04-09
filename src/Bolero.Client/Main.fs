@@ -6,105 +6,35 @@ open Bolero.Html
 open Bolero.Templating.Client
 open Microsoft.FSharp.Collections
 
-//type Model =
-//    {
-//        x: string
-//    }
 
-//let initModel =
-//    {
-//        x = ""
-//    }
-
-//type Message =
-//    | Ping
-
-//let update message model =
-//    match message with
-//    | Ping -> model
-
-//let view model dispatch =
-//    text "Hello, world!"
-
-//type MyApp() =
-//    inherit ProgramComponent<Model, Message>()
-
-//    override this.Program =
-//        Program.mkSimple (fun _ -> initModel) update view
-//#if DEBUG
-//        |> Program.withHotReload
-//#endif
-
-
-
-//type Model = { firstName: string; lastName: string }
-//let initModel = { firstName = ""; lastName = "" }
-
-//type Message = SetFirstName of string | SetLastName of string
-//let update message model =
-//    match message with
-//    | SetFirstName n -> { model with firstName = n }
-//    | SetLastName n -> { model with lastName = n }
-
-//let viewInput model setValue =
-//    input [
-//        attr.value model
-//        on.change (fun e -> setValue (unbox e.Value))
-//    ]
-
-//let view model dispatch =
-//    div [] [
-//        viewInput model.firstName (fun n -> dispatch (SetFirstName n))
-//        viewInput model.lastName (fun n -> dispatch (SetLastName n))
-//        text (sprintf "Hello, %s %s!" model.firstName model.lastName)
-//    ]
-
-////let program =
-////    Program.mkSimple (fun _ -> initModel) update view
-
-//type MyApp() =
-//    inherit ProgramComponent<Model, Message>()
-
-//    override this.Program =
-//        Program.mkSimple (fun _ -> initModel) update view
-//#if DEBUG
-//        |> Program.withHotReload
-//#endif
-
-let dd = HexShapes.cls 15 [] (5.0,5.0)
-let ff = HexShapes.mcs 10 dd |> List.concat
-let cv l m = (HexShapes.cls l [] (5.0,5.0)) |> HexShapes.mcs m |> List.concat
+//let dd = Hexel.cls 15 [] (5.0,5.0)
+//let ff = Hexel.mcs 10 dd |> List.concat
+let cv l m = (Hexel.cls l [] (10.0,5.0)) |> Hexel.mcs m |> List.concat
 
 let x1 lst = List.map (fun x -> fst x)lst |> List.map (fun x -> x*20.0)|> List.map (fun x -> Attr("cx", x))
-let y1 lst = List.map (fun x -> snd x)lst |> List.map (fun x -> x*20.0) |> List.map (fun x -> Attr("cy", x))
+let y1 lst = List.map (fun y -> snd y)lst |> List.map (fun y -> y*20.0) |> List.map (fun y -> Attr("cy", y))
 
 let cr a b = Elt("circle", [a;b;Attr("r",10);Attr("stroke","green");Attr("fill","yellow")],[])
-let fg = List.map2 (fun x y -> cr x y) (x1 ff) (y1 ff)
-let r = svg[Attr("width", 500);Attr("height", 500)] fg
+//let fg = List.map2 (fun x y -> cr x y) (x1 ff) (y1 ff)
+//let r = svg[Attr("width", 500);Attr("height", 500)] fg
  
-let vg (l,m) = svg[Attr("width", 500);Attr("height", 500)] (List.map2 (fun x y -> cr x y) (x1 (cv l m)) (y1 (cv l m)))
+let vg (l,m) = svg[Attr("width", 500);Attr("height", 200)] (List.map2 (fun x y -> cr x y) (x1 (cv l m)) (y1 (cv l m)))
 
 type Model = { 
-    cll: int
-    hst: int
-    clt: Node
+    cll: string
+    hst: string
     }
 let initModel = { 
-    cll = 5
-    hst = 10
-    clt = vg (5, 10)
+    cll = "5"
+    hst = "10"
     }
 
-type Message = IncCll | IncHst | DecCll | DecHst |SetClt
+type Message = SetCll of string| SetHst of string
 
 let update message model =
     match message with
-    | IncCll -> { model with cll = model.cll + 1 }
-    | IncHst -> { model with hst = model.hst + 1 }
-    | DecCll -> { model with cll = model.cll - 1 }
-    | DecHst -> { model with hst = model.hst - 1 }
-    | SetClt -> { model with clt = vg (model.cll,model.hst)}
-
+    | SetCll n -> { model with cll = n }
+    | SetHst n -> { model with hst = n }
 
 let viewInput model setValue =
     input [
@@ -113,15 +43,21 @@ let viewInput model setValue =
     ]
 
 let view model dispatch=
-    div [] [
-        //viewInput model.clt (fun _ -> dispatch SetClt)
-        vg (model.cll,model.cll)
-        button [on.click (fun _ -> dispatch DecCll)] [text "-"]
-        text (string model.cll)
-        button [on.click (fun _ -> dispatch IncCll)] [text "+"]
-        button [on.click (fun _ -> dispatch DecHst)] [text "-"]
-        text (string model.hst)
-        button [on.click (fun _ -> dispatch IncHst)] [text "+"]
+    div [Attr("width",300)] [
+        div[Attr("style","background-color:lightblue")][
+            text (" Sub-Cluster Count : ")
+            viewInput model.cll (fun n -> dispatch (SetCll n))
+            ]
+        div[Attr("style","background-color:lightblue")][
+            text (" Host Cluster Count: ")
+            viewInput model.hst (fun n -> dispatch (SetHst n))
+            ]
+        div[Attr("style","background-color:darkblue")][
+            vg ((model.hst |> int),(model.cll |> int))
+            ]
+        div[Attr("style","background-color:lightblue")][
+            text (sprintf " SCC: %s HCS:  %s" (model.cll) (model.hst))
+            ]
         ]
 
 type MyApp() =
