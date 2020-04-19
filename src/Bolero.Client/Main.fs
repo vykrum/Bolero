@@ -6,6 +6,33 @@ open Bolero.Html
 open Bolero.Templating.Client
 open Microsoft.FSharp.Collections
 
+/// Routing endpoints definition.
+type Page =
+    | [<EndPoint "/">] Home
+
+/// The Elmish application's model.
+type Model =
+    {
+        page: Page
+        cll: string
+        hst: string
+    }
+
+let initModel =
+    {
+        page = Home
+        cll = "5"
+        hst = "5"
+    }
+/// The Elmish application's update messages.
+type Message =
+    | SetPage of Page | SetCll of string| SetHst of string
+
+
+/// Connects the routing system to the Elmish application.
+let router = Router.infer SetPage (fun model -> model.page)
+
+type Main = Template<"wwwroot/index.html">
 
 //let dd = Hexel.cls 15 [] (5.0,5.0)
 //let ff = Hexel.mcs 10 dd |> List.concat
@@ -24,19 +51,10 @@ let cl a b = Elt("circle", [a;b;Attr("r",10);Attr("stroke","yellow");Attr("fill"
  
 let vg (l,m) = svg[Attr("width", 500);Attr("height", 500)] ([(List.map2 (fun x y -> cr x y) (x1 (cv l m).[0]) (y1 (cv l m).[0]));(List.map2 (fun x y -> cl x y) (x1 (cv l m).[1]) (y1 (cv l m).[1]))]|>List.concat)
 
-type Model = { 
-    cll: string
-    hst: string
-    }
-let initModel = { 
-    cll = "5"
-    hst = "5"
-    }
-
-type Message = SetCll of string| SetHst of string
 
 let update message model =
     match message with
+    | SetPage page -> { model with page = page }
     | SetCll n -> { model with cll = n }
     | SetHst n -> { model with hst = n }
 
@@ -67,8 +85,6 @@ let view model dispatch=
 type MyApp() =
     inherit ProgramComponent<Model, Message>()
 
-    override this.Program =
+    override _.Program =
         Program.mkSimple (fun _ -> initModel) update view
-#if DEBUG
-        |> Program.withHotReload
-#endif
+        |> Program.withRouter router
