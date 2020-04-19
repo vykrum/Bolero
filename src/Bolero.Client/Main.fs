@@ -8,7 +8,7 @@ open Microsoft.FSharp.Collections
 
 /// Routing endpoints definition.
 type Page =
-    | [<EndPoint "/">] Home
+    | [<EndPoint "/Bolero/">] Home
 
 /// The Elmish application's model.
 type Model =
