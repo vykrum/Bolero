@@ -28,7 +28,6 @@ let initModel =
 type Message =
     | SetPage of Page | SetCll of string| SetHst of string
 
-
 /// Connects the routing system to the Elmish application.
 let router = Router.infer SetPage (fun model -> model.page)
 
