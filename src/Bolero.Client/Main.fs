@@ -8,7 +8,7 @@ open Microsoft.FSharp.Collections
 
 /// Routing endpoints definition.
 type Page =
-    | [<EndPoint "/Bolero/">] Home
+    | [<EndPoint "/">] Home
 
 /// The Elmish application's model.
 type Model =
@@ -25,7 +25,7 @@ let initModel =
         hst = "5"
     }
 /// The Elmish application's update messages.
-type Message =
+type Message = //SetCll of string| SetHst of string
     | SetPage of Page | SetCll of string| SetHst of string
 
 /// Connects the routing system to the Elmish application.
@@ -84,6 +84,6 @@ let view model dispatch=
 type MyApp() =
     inherit ProgramComponent<Model, Message>()
 
-    override _.Program =
+    override this.Program =
         Program.mkSimple (fun _ -> initModel) update view
-        |> Program.withRouter router
+        //|> Program.withRouter router
