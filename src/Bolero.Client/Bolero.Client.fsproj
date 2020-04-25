@@ -15,8 +15,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.0-preview4.20210.8" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\SpacePlanning\SpacePlanning\SpacePlanning.fsproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
+    <ProjectReference Include="..\..\..\F#\SpacePlanning\SpacePlanning\SpacePlanning.fsproj" />
   </ItemGroup>
 </Project>
