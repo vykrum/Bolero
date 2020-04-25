@@ -7,8 +7,7 @@
   <ItemGroup>
     <Compile Include="Main.fs" />
     <Compile Include="Startup.fs" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Bolero.Client.fsproj" />
     <PackageReference Include="Bolero" Version="0.12.12-preview32" />
     <PackageReference Include="Bolero.Build" Version="0.12.12-preview32" />
     <PackageReference Include="Bolero.HotReload" Version="0.12.5-preview32" />
@@ -16,8 +15,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.0-preview4.20210.8" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="SpacePlanning">
-      <HintPath>G:\My Drive\SpacePlanning\F#\SpacePlanning\SpacePlanning\bin\Debug\netstandard2.0\SpacePlanning.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\..\SpacePlanning\SpacePlanning\SpacePlanning.fsproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 </Project>
